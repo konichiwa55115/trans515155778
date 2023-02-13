@@ -164,21 +164,6 @@ def transcribe_audio_file(bot, update, path):
   
 def process_media_voice(bot, update, media, name):
   chat_id = get_chat_id(update)
- // file_size = media.file_size
- // max_size = config.get_config_prop("app").get("max_media_voice_file_size", 20 * 1024 * 1024)
-
-  //if file_size > max_size:
-    message_id = get_message_id(update)
-    error_message = R.get_string_resource("file_too_big", TBDB.get_chat_lang(chat_id)).format(max_size / (1024 * 1024)) + "\n"
-    bot.send_message(
-      chat_id=chat_id,
-      text=error_message,
-      reply_to_message_id=message_id,
-      parse_mode="html",
-      is_group=chat_id < 0
-    )
-   // return
-
   file_id = media.file_id
   file_path = os.path.join(config.get_config_prop("app")["media_path"], file_id)
   file = bot.get_file(file_id)
@@ -189,7 +174,7 @@ def voice(bot, update):
   chat_id = get_chat_id(update)
   voice_enabled = TBDB.get_chat_voice_enabled(chat_id)
   if voice_enabled == 0:
-    return
+    pass
 
   message = update.message or update.channel_post
   v = message.voice
@@ -207,7 +192,7 @@ def audio(bot, update):
   voice_enabled = TBDB.get_chat_voice_enabled(chat_id)
 
   if voice_enabled == 0:
-    return
+    pass
 
   message = update.message or update.channel_post
   a = message.audio
@@ -254,7 +239,7 @@ def video_note(bot, update):
   voice_enabled = TBDB.get_chat_voice_enabled(chat_id)
 
   if voice_enabled == 0:
-    return
+    pass
 
   message = update.message or update.channel_post
   vn = message.video_note
