@@ -79,7 +79,7 @@ def transcribe_audio_file(bot, update, path):
 
     while retry and TranscriberBot.get().thread_running(message_id):
       try:
-        if len(text + " " + speech) >= 500000000000000000000000000000000000000000000000000000000000000000000000000:
+        if len(text + " " + speech) >= 4000:
           text = R.get_string_resource("transcription_continues", lang) + "\n"
           message = bot.send_message(
             chat_id=chat_id,
@@ -161,34 +161,6 @@ def transcribe_audio_file(bot, update, path):
       retry = False
 
   TranscriberBot.get().del_thread(message_id)
-
-def process_media_voice(bot, update, media, name):
-  chat_id = get_chat_id(update)
-  file_size = media.file_size
-  max_size = config.get_config_prop("app").get("max_media_voice_file_size", 20 * 1024 * 1024)
-  
-  if file_size > max_size:
-    message_id = get_message_id(update)
-    error_message = R.get_string_resource("file_too_big", TBDB.get_chat_lang(chat_id)).format(max_size / (1024 * 1024)) + "\n"
-    bot.send_message(
-      chat_id=chat_id,
-      text=error_message,
-      reply_to_message_id=message_id,
-      parse_mode="html",
-      is_group=chat_id < 0
-    )
-    return
-  file_id = media.file_id
-  file_path = os.path.join(config.get_config_prop("app")["media_path"], file_id)
-  file = bot.get_file(file_id)
-  file.download(file_path)
-
-  try:
-    transcribe_audio_file(bot, update, file_path)
-  except Exception as e:
-    logger.error("Exception handling %s from %d: %s", name, chat_id, traceback.format_exc())
-  finally:
-    os.remove(file_path)
 
 @message(Filters.voice)
 def voice(bot, update):
