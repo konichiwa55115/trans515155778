@@ -145,7 +145,7 @@ class TranscriberBot(metaclass=metaclass.Singleton):
     )
 
     self.queue = mq.MessageQueue()
-    self.request = Request(con_pool_size=100000000000000000000000000000000000000)
+    self.request = Request(con_pool_size=10)
     self.mqbot = self.MQBot(token, request=self.request, mqueue=self.queue)
     self.updater = Updater(bot=self.mqbot, use_context=True)
     self.dispatcher = self.updater.dispatcher
